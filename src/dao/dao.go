@@ -67,3 +67,26 @@ func InsertData(data bson.M) bool {
 	return false
 }
 
+func QueryData(data bson.M) (bool, []bson.M) {
+	var ret []bson.M
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	cur, err := curColl.Find(ctx, data)
+	if err != nil {
+		fmt.Println(err)
+	}
+	defer cur.Close(ctx)
+	for cur.Next(ctx) {
+		var result bson.M
+		err := cur.Decode(&result)
+		if err != nil {
+			fmt.Println(err)
+		}
+		// do something with result....
+		fmt.Println("[QueryData] ", result)
+		ret = append(ret,result)
+	}
+	if err := cur.Err(); err != nil {
+		fmt.Println(err)
+	}
+	return true, ret
+}

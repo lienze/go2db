@@ -13,6 +13,9 @@ func main() {
 	if !dao.IsConnected() {
 		fmt.Println("Connect DB error")
 	}
-	testData := bson.M{"Name":"bsonName", "Age":30}
-	dao.InsertData(testData)
+	//testData := bson.M{"Name":"bsonName", "Age":30}
+	//dao.InsertData(testData)
+	findData := bson.M{"Name":"John"}
+	_, ret := dao.QueryData(findData)
+	fmt.Println(len(ret))
 }
