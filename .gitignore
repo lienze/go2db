@@ -14,3 +14,9 @@
 # ignore swp files
 *.swp
 
+# ignore cscope and ctags files
+cscope*
+tags
+
+# ignore build binary
+main
