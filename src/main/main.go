@@ -13,9 +13,24 @@ func main() {
 	if !dao.IsConnected() {
 		fmt.Println("Connect DB error")
 	}
+	//crud Create
 	//testData := bson.M{"Name":"bsonName", "Age":30}
 	//dao.InsertData(testData)
-	findData := bson.M{"Name":"John"}
-	_, ret := dao.QueryData(findData)
-	fmt.Println(len(ret))
+
+	//crud Retrieve
+	//findData := bson.M{"Name":"John"}
+	//ret, retval := dao.QueryAllData(findData)
+	//if ret == true {
+	//	if (len(retval) > 0) {
+	//		for _, val := range retval {
+	//			// do something with each result
+	//			fmt.Println(val)
+	//		}
+	//	}
+	//}
+
+	//crud Update
+	filterData := bson.D{{"Name",nil}}
+	newData := bson.D{{"$set",bson.D{{"Name","NULL"}}}}
+	dao.UpdateAllData(filterData, newData)
 }

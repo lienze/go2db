@@ -67,7 +67,7 @@ func InsertData(data bson.M) bool {
 	return false
 }
 
-func QueryData(data bson.M) (bool, []bson.M) {
+func QueryAllData(data bson.M) (bool, []bson.M) {
 	var ret []bson.M
 	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
 	cur, err := curColl.Find(ctx, data)
@@ -82,11 +82,22 @@ func QueryData(data bson.M) (bool, []bson.M) {
 			fmt.Println(err)
 		}
 		// do something with result....
-		fmt.Println("[QueryData] ", result)
+		// fmt.Println("[QueryData] ", result)
 		ret = append(ret,result)
 	}
 	if err := cur.Err(); err != nil {
 		fmt.Println(err)
 	}
 	return true, ret
+}
+
+func UpdateAllData(filterData bson.D, NewData bson.D) bool {
+	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ret, err := curColl.UpdateMany(ctx, filterData, NewData)
+	if err != nil {
+		fmt.Println("[UpdateData] err:", err)
+		return false
+	}
+	fmt.Println(ret.MatchedCount)
+	return true
 }
