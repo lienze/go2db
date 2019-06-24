@@ -8,11 +8,9 @@ import (
 
 func main() {
 	fmt.Println("Hello World")
-	dao.ConnectDB("mytest")
+	dao.InitDB("mytest")
 	dao.SetCurColl("info")
-	if !dao.IsConnected() {
-		fmt.Println("Connect DB error")
-	}
+
 	//crud Create
 	//testData := bson.M{"Name":"bsonName", "Age":30}
 	//dao.InsertData(testData)

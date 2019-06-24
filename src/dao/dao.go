@@ -9,6 +9,24 @@ import (
 	"time"
 )
 
+func InitDBWithColl(dbname string, collname string) bool {
+	ConnectDB(dbname)
+	SetCurColl(collname)
+	if !IsConnected() {
+		fmt.Println("Connect DB error")
+		return false
+	}
+	return true
+}
+
+func InitDB(dbname string) bool {
+	ConnectDB(dbname)
+	if !IsConnected() {
+		return false
+	}
+	return true
+}
+
 func ConnectDB(dbname string) {
 	fmt.Println("Hello MongoDB, Connecting...")
 	var err error
@@ -19,8 +37,6 @@ func ConnectDB(dbname string) {
 		fmt.Println("[ConnectDB]", err)
 	}
 	curDB = dbClient.Database(dbname)
-	//curColl = curDB.Collection("info")
-	//curColl.InsertOne(ctx, bson.M{"Name": "pi", "Age": 17})
 }
 
 func SetCurDB(dbname string) bool {
@@ -112,3 +128,4 @@ func DeleteData(filterData bson.D) bool {
 	fmt.Println("[DeleteData] DeletedCount:", ret.DeletedCount)
 	return true
 }
+
