@@ -21,6 +21,3 @@ tags
 # ignore build binary
 main
 
-# go project ignore file
-go.sum
-
