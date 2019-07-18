@@ -1,7 +1,7 @@
 package main
 
 import (
-	"../dao"
+	"go2db/src/dao"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 )
