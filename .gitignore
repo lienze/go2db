@@ -20,3 +20,7 @@ tags
 
 # ignore build binary
 main
+
+# go project ignore
+go.sum
+
