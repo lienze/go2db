@@ -1,5 +1,7 @@
 #!/bin/bash
-cd ../src
+cd ../
+rm cscope*
+rm tags
 find ./ -name "*.go" > ./cscope.files
 cscope -Rbqk
 ctags -R

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"go2db/src/dao"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
+	"go2db/dao"
 )
 
 func main() {
@@ -33,6 +33,6 @@ func main() {
 	//dao.UpdateData(filterData, newData)
 
 	//crud Delete
-	filterData := bson.D{{"Name","newJohn"}}
+	filterData := bson.D{{"Name", "newJohn"}}
 	dao.DeleteData(filterData)
 }
