@@ -1,4 +1,4 @@
-module go2db
+module github.com/lienze/go2db
 
 go 1.12
 

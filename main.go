@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"github.com/lienze/go2db/dao"
 	"go.mongodb.org/mongo-driver/bson"
-	"go2db/dao"
 )
 
 func main() {
