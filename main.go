@@ -2,13 +2,16 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/lienze/go2db/dao"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 func main() {
 	fmt.Println("Hello World")
-	dao.InitDB("mytest")
+	bInit := dao.InitDB("mytest")
+	if !bInit {
+		panic("Counld not InitDB mytest")
+	}
 	dao.SetCurColl("info")
 
 	//crud Create
@@ -33,6 +36,6 @@ func main() {
 	//dao.UpdateData(filterData, newData)
 
 	//crud Delete
-	filterData := bson.D{{"Name", "newJohn"}}
-	dao.DeleteData(filterData)
+	//filterData := bson.D{{"Name", "newJohn"}}
+	//dao.DeleteData(filterData)
 }

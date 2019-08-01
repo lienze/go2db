@@ -3,10 +3,12 @@ package dao
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"time"
+	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 func InitDBWithColl(dbname string, collname string) bool {
@@ -27,16 +29,24 @@ func InitDB(dbname string) bool {
 	return true
 }
 
-func ConnectDB(dbname string) {
+func ConnectDB(dbname string) error {
 	fmt.Println("Hello MongoDB, Connecting...")
 	var err error
-	dbClient, err = mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
-	err = dbClient.Connect(ctx)
+	opt := options.Client().ApplyURI("mongodb://localhost:27017")
+	ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
+	dbClient, err := mongo.Connect(ctx, opt)
 	if err != nil {
-		fmt.Println("[ConnectDB]", err)
+		panic(err)
 	}
+	fmt.Println("Start ping....")
+	ctx, _ = context.WithTimeout(context.Background(), 1*time.Second)
+	err = dbClient.Ping(ctx, readpref.Primary())
+	if err != nil {
+		return err
+	}
+	fmt.Println("Ping end....")
 	curDB = dbClient.Database(dbname)
+	return nil
 }
 
 func SetCurDB(dbname string) bool {
@@ -76,7 +86,7 @@ func GetCurColl() *mongo.Collection {
 
 func InsertData(data bson.M) bool {
 	if curColl != nil {
-		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+		ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 		curColl.InsertOne(ctx, data)
 		return true
 	}
@@ -85,7 +95,7 @@ func InsertData(data bson.M) bool {
 
 func QueryData(data bson.M) (bool, []bson.M) {
 	var ret []bson.M
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	cur, err := curColl.Find(ctx, data)
 	if err != nil {
 		fmt.Println(err)
@@ -99,7 +109,7 @@ func QueryData(data bson.M) (bool, []bson.M) {
 		}
 		// do something with result....
 		// fmt.Println("[QueryData] ", result)
-		ret = append(ret,result)
+		ret = append(ret, result)
 	}
 	if err := cur.Err(); err != nil {
 		fmt.Println(err)
@@ -108,7 +118,7 @@ func QueryData(data bson.M) (bool, []bson.M) {
 }
 
 func UpdateData(filterData bson.D, NewData bson.D) bool {
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	ret, err := curColl.UpdateMany(ctx, filterData, NewData)
 	if err != nil {
 		fmt.Println("[UpdateData] err:", err)
@@ -119,7 +129,7 @@ func UpdateData(filterData bson.D, NewData bson.D) bool {
 }
 
 func DeleteData(filterData bson.D) bool {
-	ctx, _ := context.WithTimeout(context.Background(), 30*time.Second)
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Second)
 	ret, err := curColl.DeleteMany(ctx, filterData)
 	if err != nil {
 		fmt.Println("[DeleteData] err:", err)
@@ -128,4 +138,3 @@ func DeleteData(filterData bson.D) bool {
 	fmt.Println("[DeleteData] DeletedCount:", ret.DeletedCount)
 	return true
 }
-
